@@ -7,13 +7,22 @@
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+  <ion-item>
+    <ion-select [(ngModel)]="status" (ionChange)="listar()">
+        <ion-select-option value="pendente">Pendentes</ion-select-option>
+        <ion-select-option value="assistido">Assistidos</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngFor="let filme of filmes | async">
+    <ion-label>
+      <h2>{{filme.nome}}</h2>
+      <h3>Gênero: {{filme.genero.descricao}}</h3>
+      <ion-button *ngIf="filme.status=='pendente'" (click)="assistir(filme)">Assistir</ion-button> 
+    </ion-label>
+  </ion-item>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="inserir()">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+    <ion-fab-button (click)="inserir()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

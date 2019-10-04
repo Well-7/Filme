@@ -1,54 +1,61 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilmesService {
-
+  private filmesCollection: AngularFirestoreCollection<Filme>;
+  filmes: Observable<Filme[]>;
   generos = [
-    {descricao: 'Ação'},
-    {descricao: 'Aventura'},
-    {descricao: 'Terror'},
-    {descricao: 'Suspense'},
-    {descricao: 'Comédia'}
+    { descricao: 'Ação' },
+    { descricao: 'Aventura' },
+    { descricao: 'Terror' },
+    { descricao: 'Suspense' },
+    { descricao: 'Comédia' }
   ]
 
-  constructor() { }
-
-  public inserir(filme: Filme): boolean {
-    console.log('estou inserindo');
-    console.log(filme);
-    return true;
+  constructor(private afs: AngularFirestore) {
+    this.filmesCollection = afs.collection<Filme>('filmes');
+    this.filmes = this.filmesCollection.valueChanges();
   }
 
-  public remover(filme: Filme): boolean {
-    console.log('estou removendo');
-    console.log(filme);
-    return true;
+  public inserir(filme: Filme) {
+    const id = this.afs.createId();
+    return this.filmesCollection.doc(id).set({...filme, id});
   }
 
-  public assistir(filme: Filme): boolean {
-    console.log('estou assistindo');
-    console.log(filme);
-    return true;
+  public remover(filme: Filme) {
+    return this.filmesCollection.doc(filme.id).delete();
   }
 
-  public listar(status: string): Array<Filme> {
-    console.log('estou listando');
+  public assistir(filme: Filme) {
+    return this.filmesCollection.doc(filme.id).update({status: 'assistido'});
     console.log(status);
-    return [];
   }
 
-  public ListarGeneros(): Array<Genero> {
+  public listar(status: string): Observable<Filme[]> {
+    return this.filmes;
+  }
+
+  public listarGeneros(): Array<Genero> {
     return this.generos;
   }
 }
 
 export class Filme {
+  id: string;
   nome: string;
   genero: Genero;
   duracao: number;
   status: string;
+  constructor() {
+    this.status = 'pendente';
+  }
+  public assistir() {
+    this.status = 'assistido';
+  }
 }
 
 export class Genero {

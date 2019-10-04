@@ -11,16 +11,26 @@ export class CadastroPage implements OnInit {
   filme: Filme;
   generos: Array<Genero>;
 
+
   constructor(
-    public filmesService: FilmesService,
+    private filmesService: FilmesService,
     public router: Router
   ) { }
 
   ngOnInit() {
     this.filme = new Filme();
-    this.generos = this.filmesService.ListarGeneros();
+    this.generos = this.filmesService.listarGeneros();
   }
-  cancelar() {
+
+  gravar() {
+    this.filmesService.inserir(this.filme).then(
+      () => {
+        console.log('Gravado com sucesso!');
+        this.voltar();
+      });
+  }
+
+  voltar() {
     this.router.navigate(["home"]);
   }
 

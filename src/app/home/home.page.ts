@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Filme, FilmesService } from '../filmes.service';
 import { Observable } from 'rxjs';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ export class HomePage {
 
   constructor(
     private filmesService: FilmesService,
+    private socialSharing: SocialSharing,
     public router: Router,
   ) {}
 
@@ -33,5 +35,12 @@ export class HomePage {
   inserir() {
     this.router.navigate(["cadastro"]);
   }
-
+  remover(filme) {
+    this.filmesService.remover(filme);
+  }
+  compartilhar(filme: Filme) {
+    const mensagem = `Estou compartilhando o filme ${filme.nome}`;
+    console.log(mensagem);
+    this.socialSharing.share(mensagem, filme.nome);
+  }
 }

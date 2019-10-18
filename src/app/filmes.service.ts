@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 })
 export class FilmesService {
   private filmesCollection: AngularFirestoreCollection<Filme>;
-  filmes: Observable<Filme[]>;
   generos = [
     { descricao: 'Ação' },
     { descricao: 'Aventura' },
@@ -17,8 +16,7 @@ export class FilmesService {
   ]
 
   constructor(private afs: AngularFirestore) {
-    this.filmesCollection = afs.collection<Filme>('filmes');
-    this.filmes = this.filmesCollection.valueChanges();
+
   }
 
   public inserir(filme: Filme) {
@@ -36,7 +34,8 @@ export class FilmesService {
   }
 
   public listar(status: string): Observable<Filme[]> {
-    return this.filmes;
+    this.filmesCollection = this.afs.collection<Filme>('filmes', ref => ref.where('status', '==', status));
+    return this.filmesCollection.valueChanges();
   }
 
   public listarGeneros(): Array<Genero> {

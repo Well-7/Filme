@@ -18,6 +18,8 @@
       <h2>{{filme.nome}}</h2>
       <h3>Gênero: {{filme.genero.descricao}}</h3>
       <ion-button *ngIf="filme.status=='pendente'" (click)="assistir(filme)">Assistir</ion-button> 
+      <ion-button *ngIf="filme.status=='assistido'" (click)="remover(filme)">Remover</ion-button> 
+      <ion-button *ngIf="filme.status=='assistido'" (click)="compartilhar(filme)">Compartilhar</ion-button> 
     </ion-label>
   </ion-item>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
